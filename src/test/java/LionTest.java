@@ -16,11 +16,14 @@ public class LionTest {
     private Feline feline;
 
     @Test
-    public void doesHaveManeTest() throws Exception {
+    public void doesHaveManeTestShouldReturnFalse() throws Exception {
         Lion lion = new Lion(feline, "Самка");
-        boolean actual = lion.doesHaveMane();
-        boolean expected = false;
-        Assert.assertEquals(expected, actual);
+        Assert.assertFalse(lion.doesHaveMane());
+    }
+    @Test
+    public void doesHaveManeTestShouldReturnTrue() throws Exception {
+        Lion lion = new Lion(feline, "Самец");
+        Assert.assertTrue(lion.doesHaveMane());
     }
 
     @Test
@@ -31,17 +34,16 @@ public class LionTest {
         Assert.assertEquals(List.of("Животные", "Птицы", "Рыба"), foods);
     }
 
-
     @Test
     public void getKittensTest() throws Exception {
         Lion lion = new Lion(feline,"Самец");
-        Mockito.when(feline.getKittens()).thenReturn(1);
-        int kittens = lion.getKittens();
-        Assert.assertEquals(1, kittens);
+        lion.getKittens();
+        Mockito.verify(feline).getKittens();
     }
 
-//    @Test
-//    public void undefinedSexTest() throws Exception {
-//        Lion lion = new Lion(feline, "Что-то иное");
-//    }
+    @Test
+    public void undefinedSexTest() {
+        Exception actual = Assert.assertThrows(Exception.class, () -> new Lion(feline, "Что-то иное"));
+        Assert.assertEquals("Используйте допустимые значения пола животного - самей или самка", actual.getMessage());
+    }
 }
