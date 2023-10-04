@@ -29,9 +29,10 @@ public class LionTest {
     @Test
     public void lionFoodTest() throws Exception {
         Lion lion = new Lion(feline, "Самец");
-        Mockito.when(feline.getFood("Хищник")).thenReturn(List.of("Животные", "Птицы", "Рыба"));
+        List<String> expectedFood = List.of("Животные", "Птицы", "Рыба");
+        Mockito.when(feline.getFood("Хищник")).thenReturn(expectedFood);
         List<String> foods = lion.getFood();
-        Assert.assertEquals(List.of("Животные", "Птицы", "Рыба"), foods);
+        Assert.assertEquals(expectedFood, foods);
     }
 
     @Test
