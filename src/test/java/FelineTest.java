@@ -2,49 +2,53 @@ import com.example.Feline;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.List;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(Parameterized.class)
 public class FelineTest {
 
-    @Spy
-    private Feline feline;
+    private final int kittensCount;
+    private final int expectedKittensCount;
 
-    @Test
-    public void getKittensWOArgShouldReturn1() {
-        int actual = feline.getKittens();
-        int expected = 1;
-        System.out.println(actual);
-        Mockito.verify(feline, Mockito.times(1)).getKittens();
-        Assert.assertEquals(expected, actual);
+
+    public FelineTest(int kittensCount, int expectedKittensCount) {
+        this.kittensCount = kittensCount;
+        this.expectedKittensCount = expectedKittensCount;
     }
 
-    @Test
-    public void getKittensWithArg3ShouldReturn3() {
-        int num = feline.getKittens(3);
-        System.out.println(num);
-        Assert.assertEquals(3, feline.getKittens(3));
+    @Parameterized.Parameters
+    public static Object[][] getCreds() {
+        return new Object[][] {
+                {1, 1},
+                {3, 3},
+                {5, 5},
+        };
     }
 
     @Test
     public void getFamilyTest() {
-        String expected = "Кошачьи";
-        String actual = feline.getFamily();
-        Assert.assertEquals(expected, actual);
+        Feline feline = new Feline();
+        Assert.assertEquals("Кошачьи", feline.getFamily());
     }
 
     @Test
-    public void eatMeatTest() {
-        try {
-            List<String> foodList = feline.eatMeat();
-            Assert.assertEquals(List.of("Животные", "Птицы", "Рыба"), foodList);
-        } catch (Exception e) {
-            Assert.fail("Исключение не выбрасывается при правильной работе: " + e);
-        }
+    public void eatMeatTest() throws Exception {
+        Feline feline = Mockito.spy(new Feline());
+        feline.eatMeat();
+        Mockito.verify(feline).getFood("Хищник");
+    }
 
+    @Test
+    public void getKittensShouldReturn1() {
+        Feline feline = new Feline();
+        Assert.assertEquals(1, feline.getKittens());
+    }
+
+    @Test
+    public void getKittensWithParams() {
+        Feline feline = new Feline();
+        Assert.assertEquals(expectedKittensCount, feline.getKittens(kittensCount));
     }
 }
